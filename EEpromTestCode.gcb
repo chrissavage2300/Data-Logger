@@ -1,0 +1,57 @@
+'''A demonstration program for GCGB and GCB.
+'''--------------------------------------------------------------------------------------------------------------------------------
+'''This program
+'''
+'''
+'''@author
+'''@licence GPL
+'''@version
+'''@date    01.11.2015
+'''********************************************************************************
+
+; ----- Configuration
+
+ #chip 18F13K22, 4
+ #config '[todo]
+
+' #include '[todo]
+#include <i2ceeprom.h>
+#include <lowlevel\hwi2c.h>
+
+; ----- Constants
+'#define DeviceAddressRead a1 '10100001
+'#define DeviceAddresswrite a0 '10100000
+#define HI2C_BAUD_RATE 400
+#define eepDev 0xA0
+; ----- Define Hardware settings
+  '[todo]
+#define HI2C_DATA PORTC.4
+#define HI2C_CLOCK PORTC.3
+Dir HI2C_DATA in
+Dir HI2C_CLOCK in
+HI2CMode Master
+
+; ----- Variables
+  Dim EEpromDataAddress as Word
+  Dim EEpromData as Byte
+
+; ----- Quick Command Reference:
+  '[todo]
+EEpromAddress=0
+
+
+; ----- Main body of program commences here.
+Do
+EEpromData = ReadAD(AN0) 'Read analog port0 (8 bit result)
+'eeprom wr byte (Address for chip,Adress of Data, Data (8 bits)
+
+eeprom_wr_byte ( eepDev, EEpromDataAddress, EEpromData)
+
+EEpromDataAddress=EEpromDataAddress+1
+
+wait 1 m
+
+loop
+end
+
+; ----- Support methods.  Subroutines and Functions
