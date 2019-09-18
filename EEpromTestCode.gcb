@@ -1,0 +1,41 @@
+'''A demonstration program for GCGB and GCB.
+'''--------------------------------------------------------------------------------------------------------------------------------
+'''This program
+'''
+'''
+'''@author
+'''@licence	GPL
+'''@version
+'''@date   	01.11.2015
+'''********************************************************************************
+
+; ----- Configuration
+
+ #chip 18F13K22, 4
+ #config '[todo]
+
+' #include '[todo]
+#include <i2ceeprom.h>
+
+; ----- Constants
+#define DeviceAddressRead 10100001
+#define DeviceAddresswrite 10100000
+
+; ----- Define Hardware settings
+  '[todo]
+
+
+; ----- Variables
+  Dim EEpromAddress as Word
+  Dim EEpromData as Byte
+
+; ----- Quick Command Reference:
+  '[todo]
+
+
+
+; ----- Main body of program commences here.
+
+end
+
+; ----- Support methods.  Subroutines and Functions
