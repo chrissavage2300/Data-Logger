@@ -1,0 +1,73 @@
+'''A demonstration program for GCGB and GCB.
+'''--------------------------------------------------------------------------------------------------------------------------------
+'''This program
+'''
+'''
+'''@author
+'''@licence GPL
+'''@version
+'''@date    01.11.2015
+'''********************************************************************************
+
+; ----- Configuration
+
+ #chip 18F13K22, 8
+ #config '[todo]
+
+' #include '[todo]
+#include <i2ceeprom.h>
+#include <lowlevel\hwi2c.h>
+#define USART_BAUD_RATE 9600
+; ----- Constants
+'#define DeviceAddressRead a1 '10100001
+'#define DeviceAddresswrite a0 '10100000
+#define HI2C_BAUD_RATE 400
+#define eepDev 0xA0
+; ----- Define Hardware settings
+  '[todo]
+#define HI2C_DATA PORTC.4
+#define HI2C_CLOCK PORTC.3
+Dir HI2C_DATA in
+Dir HI2C_CLOCK in
+HI2CMode Master
+
+; ----- Variables
+  Dim EEpromDataAddress as Word
+  Dim EEpromData as Byte
+  Dim TempData as Byte
+
+; ----- Quick Command Reference:
+  '[todo]
+EEpromDataAddress=0
+TempData=0
+
+; ----- Main body of program commences here.
+Do
+EEpromData = ReadAD(AN3) 'Read analog port0 (8 bit result)
+'eeprom wr byte (Address for chip,Adress of Data, Data (8 bits)
+HSerPrint "AN0 Value"
+HSerSend 13
+HSerSend 10
+HSerPrint EEpromData
+HSerSend 13
+HSerSend 10
+
+eeprom_wr_byte ( eepDev, EEpromDataAddress, EEpromData)
+
+'EEpromDataAddress=EEpromDataAddress+1
+HSerPrint "EEprom Written"
+HSerSend 13
+HSerSend 10
+'EEpromDataAddress=0
+
+eeprom_rd_byte ( eepDev, EEpromDataAddress, TempData)
+HSerPrint "EEprom Read"
+HSerPrint TempData
+HSerSend 13
+HSerSend 10
+wait 1 second
+
+loop
+end
+
+; ----- Support methods.  Subroutines and Functions
