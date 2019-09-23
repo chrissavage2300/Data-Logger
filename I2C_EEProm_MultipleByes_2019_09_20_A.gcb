@@ -1,0 +1,116 @@
+'''A demonstration program for GCGB and GCB.
+'''--------------------------------------------------------------------------------------------------------------------------------
+'''This program
+'''
+'''
+'''@author
+'''@licence GPL
+'''@version
+'''@date    01.11.2015
+'''********************************************************************************
+
+; ----- Configuration
+
+ #chip 18F13K22, 8
+ #config '[todo]
+
+' #include '[todo]
+#include <i2ceeprom.h>
+#include <lowlevel\hwi2c.h>
+#define USART_BAUD_RATE 9600
+; ----- Constants
+
+#define HI2C_BAUD_RATE 400
+#define eepDev 0xA0
+; ----- Define Hardware settings
+  '[todo]
+#define HI2C_DATA PORTC.4
+#define HI2C_CLOCK PORTC.3
+Dir HI2C_DATA in
+Dir HI2C_CLOCK in
+HI2CMode Master
+
+; ----- Variables
+  Dim EEpromDataAddress as Word
+  Dim EEpromData as Byte
+  Dim TempData as Byte
+  Dim MaxAddress as Word
+  Dim Rec as Byte
+  Dim RecieveCounter as Byte
+  Dim EraseCounter as Word
+; ----- Quick Command Reference:
+  '[todo]
+EEpromDataAddress=0
+TempData=0
+
+; ----- Main body of program commences here.
+Do
+  HSerReceive (Rec)
+  If Rec = "B" then
+    Do
+        EEpromData = ReadAD(AN3) 'Read analog port3 (8 bit result)
+
+        HSerPrint "AN3 Value"
+        HSerSend 13
+        HSerSend 10
+        HSerPrint EEpromData
+        HSerSend 13
+        HSerSend 10
+        'eeprom wr byte (Address for chip,Address of Data, Data (8 bits)
+        eeprom_wr_byte ( eepDev, EEpromDataAddress, EEpromData)
+        EEpromDataAddress=EEpromDataAddress+1
+
+
+        HSerPrint "EEprom Written"
+        HSerSend 13
+        HSerSend 10
+        HSerPrint "Current Address"
+        HSerSend 13
+        HSerSend 10
+        HSerPrint EEpromDataAddress
+        HSerSend 13
+        HSerSend 10
+        MaxAddress = EEpromDataAddress
+        wait 1 second
+        HSerReceive (Rec)
+        if Rec = "S" then EXIT Do 'Stops the loop from happening
+    loop
+
+  end if
+
+    If Rec = "A" then
+      EEpromDataAddress=0
+      HSerPrint "EEprom Read"
+      For EEpromDataAddress = 0 to MaxAddress
+      eeprom_rd_byte ( eepDev, EEpromDataAddress, TempData)
+      HSerPrint EEpromDataAddress
+      HSerSend 13
+      HSerSend 10
+      HSerPrint TempData
+      HSerSend 13
+      HSerSend 10
+      next
+      EEpromDataAddress=0
+      MaxAddress=0
+      end if
+
+    If Rec = "E" then
+      HSerPrint "% Done"
+    For EEpromDataAddress = 0 to 65535
+      eeprom_wr_byte ( eepDev, EEpromDataAddress, 0)
+
+      HSerPrint EEpromDataAddress
+      HSerSend 13
+      HSerSend 10
+      HSerReceive (Rec)
+      if Rec = "S" then EXIT For 'Stops the loop from happening
+      wait 5 ms
+    next
+    HSerPrint "Device Erased"
+    end if
+
+
+loop
+end
+
+; ----- Support methods.  Subroutines and Functions
